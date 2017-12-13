@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block main %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <h1>显示时间</h1>
+            <form action="/display" method="post">
+                <div class="form-group row">
+                    <label for="staTime" class="col-sm-2 col-form-label">开始时间</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staTime" name="staTime" value="{{ staTime }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="timeDur" class="col-sm-2 col-form-label">持续时间</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="timeDur" name="timeDur" value="{{ timeDur }} 天">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="endTime" class="col-sm-2 col-form-label">结束时间</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="endTime" name="endTime" value="{{ endTime }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="nowTime" class="col-sm-2 col-form-label">当前时间</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="nowTime" name="nowTime" value="{{ nowTime }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="timeLef" class="col-sm-2 col-form-label">剩余时间</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="timeLef" name="timeLef" value="{{ timeLef }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="timeZone" class="col-sm-2 col-form-label">选择时区</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="timeZone" name="timeZone">
+                            <option>America/Los_Angeles</option>
+                            <option>Europe/Moscow</option>
+                            <option>Europe/London</option>
+                            <option>Asia/Shanghai</option>
+                            <option>Asia/Tokyo</option>
+                        </select>
+                        <input type="text" readonly class="form-control-plaintext" id="timeLef" name="timeLef" value="">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($('#nowTime').val() === '') {
+            var nowTime = luxon.DateTime.local();
+            $('#nowTime').val(nowTime.toISO());
+            var timeLef = luxon.Interval.fromDateTimes(nowTime, luxon.DateTime.fromISO($('#endTime').val())).toDuration().toObject().milliseconds;
+            $('#timeLef').val(timeLef);
+        }
+
+        $('#timeZone').change(function() {
+            var staTime = luxon.DateTime.fromISO($('#staTime').val());
+            var endTime = luxon.DateTime.fromISO($('#endTime').val());
+            var nowTime = luxon.DateTime.fromISO($('#nowTime').val());
+            $('#staTime').val(staTime.setZone($('#timeZone').val()));
+            $('#endTime').val(endTime.setZone($('#timeZone').val()));
+            $('#nowTime').val(nowTime.setZone($('#timeZone').val()));
+        });
+    });
+</script>
+{% endblock %}
