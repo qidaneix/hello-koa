@@ -13,7 +13,7 @@ module.exports = {
         if (nowTimeFrom === 'server') {
             obj.nowTime = DateTime.local().toISO();
         }
-        obj.endTime = DateTime.fromISO(staTime).plus({days: parseInt(timeDur)}).toISO();
+        obj.endTime = DateTime.fromISO(obj.staTime).plus({days: parseInt(timeDur)}).toISO();
         if (obj.nowTime) {
             obj.timeLef = Interval.fromDateTimes(DateTime.fromISO(obj.nowTime), DateTime.fromISO(obj.endTime)).toDuration().toObject().milliseconds;
         }
